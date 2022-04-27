@@ -1,0 +1,49 @@
+{
+	"name": "ADLS_SQLDB_DATAFLOW",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ADLS_Themes",
+						"type": "DatasetReference"
+					},
+					"name": "adlslego"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlDB",
+						"type": "DatasetReference"
+					},
+					"name": "SQLDatabase"
+				}
+			],
+			"transformations": [
+				{
+					"name": "AddLoadDate"
+				}
+			],
+			"scriptLines": [
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> adlslego",
+				"adlslego derive(load_date = currentDate()) ~> AddLoadDate",
+				"AddLoadDate sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> SQLDatabase"
+			]
+		}
+	}
+}
