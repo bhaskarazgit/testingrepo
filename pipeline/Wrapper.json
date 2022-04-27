@@ -1,0 +1,41 @@
+{
+	"name": "Wrapper",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute HTTPS_ADLS",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "HTTPS_ADLS_COPY_LEGOS_THEMES",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Execute  ADLS_TOADB",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute HTTPS_ADLS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "adls_to_asdb_pipeline",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"annotations": []
+	}
+}
