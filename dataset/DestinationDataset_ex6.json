@@ -1,0 +1,20 @@
+{
+	"name": "DestinationDataset_ex6",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "themes.parquet",
+				"fileSystem": "legos"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
