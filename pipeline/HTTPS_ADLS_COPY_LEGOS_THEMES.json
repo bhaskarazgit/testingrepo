@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy_ex6",
+				"name": "HTTPS_ADLS_COPY",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
