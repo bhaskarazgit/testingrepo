@@ -63,13 +63,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SourceDataset_ex6",
+						"referenceName": "HTTP_Legos",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DestinationDataset_ex6",
+						"referenceName": "ADLS_Themes",
 						"type": "DatasetReference"
 					}
 				]

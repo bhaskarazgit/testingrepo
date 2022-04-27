@@ -1,5 +1,5 @@
 {
-	"name": "SourceDataset_ex6",
+	"name": "HTTP_Legos",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Http_Rebrickable",

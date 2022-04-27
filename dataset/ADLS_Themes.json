@@ -1,5 +1,5 @@
 {
-	"name": "DestinationDataset_ex6",
+	"name": "ADLS_Themes",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureDataLakeStorage",
