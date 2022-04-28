@@ -18,7 +18,7 @@
 					"source": {
 						"type": "SqlServerSource",
 						"sqlReaderQuery": {
-							"value": "select * from @{pipeline().parameters.SourceTableName} where @{pipeline().parameters.WaterMarkColumn} >=@{pipeline().parameters.FromDate} @{pipeline().parameters.WaterMarkColumn} >=@{pipeline().parameters.FromDate} and @{pipeline().parameters.WaterMarkColumn} <=@{pipeline().parameters.ToDate} ",
+							"value": "select * from @{pipeline().parameters.SourceTableName} \nwhere @{pipeline().parameters.WaterMarkColumn} >=@{pipeline().parameters.FromDate} \nand @{pipeline().parameters.WaterMarkColumn} <=@{pipeline().parameters.ToDate} ",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -29,9 +29,10 @@
 						"writeBehavior": "upsert",
 						"upsertSettings": {
 							"useTempDB": false,
-							"keys": [
-								"PersonID"
-							]
+							"keys": {
+								"value": "@pipeline().parameters.KeyColumnName",
+								"type": "Expression"
+							}
 						},
 						"sqlWriterUseTableLock": true,
 						"disableMetricsCollection": false
@@ -58,7 +59,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"SinkTable": {
-								"value": "@pipeline().parameters.TableName",
+								"value": "@pipeline().parameters.SinkTableName",
 								"type": "Expression"
 							}
 						}
