@@ -29,10 +29,9 @@
 						"writeBehavior": "upsert",
 						"upsertSettings": {
 							"useTempDB": false,
-							"keys": {
-								"value": "@pipeline().parameters.KeyColumnName",
-								"type": "Expression"
-							}
+							"keys": [
+								""
+							]
 						},
 						"sqlWriterUseTableLock": true,
 						"disableMetricsCollection": false
@@ -81,7 +80,7 @@
 				"defaultValue": "LastModifytime"
 			},
 			"KeyColumnName": {
-				"type": "string",
+				"type": "array",
 				"defaultValue": "PersonID"
 			},
 			"FromDate": {
