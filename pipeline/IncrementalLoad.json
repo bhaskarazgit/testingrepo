@@ -1,0 +1,14 @@
+{
+	"name": "IncrementalLoad",
+	"properties": {
+		"parameters": {
+			"TableName": {
+				"type": "string"
+			},
+			"WaterMarkColumn": {
+				"type": "string"
+			}
+		},
+		"annotations": []
+	}
+}
