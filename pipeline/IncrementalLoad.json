@@ -67,7 +67,7 @@
 			}
 		],
 		"parameters": {
-			"SourceTableName ": {
+			"SourceTableName": {
 				"type": "string"
 			},
 			"SinkTableName": {
