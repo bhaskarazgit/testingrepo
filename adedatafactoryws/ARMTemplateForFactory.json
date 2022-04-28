@@ -19,6 +19,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'OnPremSQLDBLinkedDService'"
 		},
+		"OnPremSQLDBLinkedDService_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'OnPremSQLDBLinkedDService'"
+		},
 		"AzureDataLakeStorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://adestorageacct.dfs.core.windows.net"
@@ -26,6 +30,10 @@
 		"Http_Rebrickable_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://cdn.rebrickable.com/media/downloads/"
+		},
+		"OnPremSQLDBLinkedDService_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "anshu"
 		}
 	},
 	"variables": {
@@ -147,7 +155,7 @@
 							"source": {
 								"type": "SqlServerSource",
 								"sqlReaderQuery": {
-									"value": "select * from @{pipeline().parameters.TableName} where @{pipeline().parameters.WaterMarkColumn}='4/28/2022'",
+									"value": "select * from @{pipeline().parameters.TableName} where @{pipeline().parameters.WaterMarkColumn}<'4/28/2022'",
 									"type": "Expression"
 								},
 								"queryTimeout": "02:00:00",
@@ -578,10 +586,21 @@
 				"annotations": [],
 				"type": "SqlServer",
 				"typeProperties": {
-					"connectionString": "[parameters('OnPremSQLDBLinkedDService_connectionString')]"
+					"connectionString": "[parameters('OnPremSQLDBLinkedDService_connectionString')]",
+					"userName": "[parameters('OnPremSQLDBLinkedDService_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('OnPremSQLDBLinkedDService_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "OnPremSqlServverIR",
+					"type": "IntegrationRuntimeReference"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/OnPremSqlServverIR')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/OnPremSqlServverIR')]",

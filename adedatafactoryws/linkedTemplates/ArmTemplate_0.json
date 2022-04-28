@@ -19,6 +19,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'OnPremSQLDBLinkedDService'"
 		},
+		"OnPremSQLDBLinkedDService_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'OnPremSQLDBLinkedDService'"
+		},
 		"AzureDataLakeStorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://adestorageacct.dfs.core.windows.net"
@@ -26,6 +30,10 @@
 		"Http_Rebrickable_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://cdn.rebrickable.com/media/downloads/"
+		},
+		"OnPremSQLDBLinkedDService_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "anshu"
 		}
 	},
 	"variables": {
@@ -186,19 +194,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/OnPremSQLDBLinkedDService')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('OnPremSQLDBLinkedDService_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/OnPremSqlServverIR')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
@@ -297,21 +292,27 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/OnPremSQLDB')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
+			"name": "[concat(parameters('factoryName'), '/OnPremSQLDBLinkedDService')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"linkedServiceName": {
-					"referenceName": "OnPremSQLDBLinkedDService",
-					"type": "LinkedServiceReference"
-				},
 				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [],
-				"typeProperties": {}
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('OnPremSQLDBLinkedDService_connectionString')]",
+					"userName": "[parameters('OnPremSQLDBLinkedDService_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('OnPremSQLDBLinkedDService_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "OnPremSqlServverIR",
+					"type": "IntegrationRuntimeReference"
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/OnPremSQLDBLinkedDService')]"
+				"[concat(variables('factoryId'), '/integrationRuntimes/OnPremSqlServverIR')]"
 			]
 		},
 		{
@@ -408,6 +409,80 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/OnPremSQLDB')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OnPremSQLDBLinkedDService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/OnPremSQLDBLinkedDService')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ADLS_SQLDB_DATAFLOW')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ADLS_Themes",
+								"type": "DatasetReference"
+							},
+							"name": "adlslego"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlDB",
+								"type": "DatasetReference"
+							},
+							"name": "SQLDatabase"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AddLoadDate"
+						}
+					],
+					"scriptLines": [
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> adlslego",
+						"adlslego derive(load_date = currentDate()) ~> AddLoadDate",
+						"AddLoadDate sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     saveOrder: 1,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> SQLDatabase"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ADLS_Themes')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSqlDB')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/IncrementalLoad')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -429,7 +504,7 @@
 							"source": {
 								"type": "SqlServerSource",
 								"sqlReaderQuery": {
-									"value": "select * from @{pipeline().parameters.TableName} where @{pipeline().parameters.WaterMarkColumn}='4/28/2022'",
+									"value": "select * from @{pipeline().parameters.TableName} where @{pipeline().parameters.WaterMarkColumn}<'4/28/2022'",
 									"type": "Expression"
 								},
 								"queryTimeout": "02:00:00",
@@ -490,62 +565,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/OnPremSQLDB')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSqlDB')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ADLS_SQLDB_DATAFLOW')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ADLS_Themes",
-								"type": "DatasetReference"
-							},
-							"name": "adlslego"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "AzureSqlDB",
-								"type": "DatasetReference"
-							},
-							"name": "SQLDatabase"
-						}
-					],
-					"transformations": [
-						{
-							"name": "AddLoadDate"
-						}
-					],
-					"scriptLines": [
-						"source(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> adlslego",
-						"adlslego derive(load_date = currentDate()) ~> AddLoadDate",
-						"AddLoadDate sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     recreate:true,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     saveOrder: 1,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> SQLDatabase"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ADLS_Themes')]",
 				"[concat(variables('factoryId'), '/datasets/AzureSqlDB')]"
 			]
 		},

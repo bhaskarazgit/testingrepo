@@ -14,11 +14,17 @@
 		"OnPremSQLDBLinkedDService_connectionString": {
 			"value": ""
 		},
+		"OnPremSQLDBLinkedDService_password": {
+			"value": ""
+		},
 		"AzureDataLakeStorage_properties_typeProperties_url": {
 			"value": "https://adestorageacct.dfs.core.windows.net"
 		},
 		"Http_Rebrickable_properties_typeProperties_url": {
 			"value": "https://cdn.rebrickable.com/media/downloads/"
+		},
+		"OnPremSQLDBLinkedDService_properties_typeProperties_userName": {
+			"value": "anshu"
 		}
 	}
 }
