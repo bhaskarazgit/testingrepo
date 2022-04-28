@@ -18,7 +18,7 @@
 					"source": {
 						"type": "SqlServerSource",
 						"sqlReaderQuery": {
-							"value": "select * from @{pipeline().parameters.TableName} where @{pipeline().parameters.WaterMarkColumn}='4/28/2022'",
+							"value": "select * from @{pipeline().parameters.TableName} where @{pipeline().parameters.WaterMarkColumn}<'4/28/2022'",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
