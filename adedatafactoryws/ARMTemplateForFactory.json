@@ -165,13 +165,12 @@
 								"type": "AzureSqlSink",
 								"writeBehavior": "upsert",
 								"upsertSettings": {
-									"useTempDB": true,
+									"useTempDB": false,
 									"keys": [
-										"id"
+										"PersonID"
 									]
 								},
 								"sqlWriterUseTableLock": true,
-								"tableOption": "autoCreate",
 								"disableMetricsCollection": false
 							},
 							"enableStaging": false,
@@ -466,7 +465,7 @@
 				"schema": [],
 				"typeProperties": {
 					"schema": "dbo",
-					"table": "legos"
+					"table": "customer_table"
 				}
 			},
 			"dependsOn": [
