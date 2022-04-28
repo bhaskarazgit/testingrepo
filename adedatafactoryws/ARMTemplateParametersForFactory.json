@@ -11,6 +11,9 @@
 		"AzureSQLDB_connectionString": {
 			"value": ""
 		},
+		"OnPremSQLDBLinkedDService_connectionString": {
+			"value": ""
+		},
 		"AzureDataLakeStorage_properties_typeProperties_url": {
 			"value": "https://adestorageacct.dfs.core.windows.net"
 		},

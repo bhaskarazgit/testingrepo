@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSQLDB'"
 		},
+		"OnPremSQLDBLinkedDService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'OnPremSQLDBLinkedDService'"
+		},
 		"AzureDataLakeStorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://adestorageacct.dfs.core.windows.net"
@@ -55,6 +59,9 @@
 					},
 					"AzureSQLDB_connectionString": {
 						"value": "[parameters('AzureSQLDB_connectionString')]"
+					},
+					"OnPremSQLDBLinkedDService_connectionString": {
+						"value": "[parameters('OnPremSQLDBLinkedDService_connectionString')]"
 					},
 					"AzureDataLakeStorage_properties_typeProperties_url": {
 						"value": "[parameters('AzureDataLakeStorage_properties_typeProperties_url')]"
