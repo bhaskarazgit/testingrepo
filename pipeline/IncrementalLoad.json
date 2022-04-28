@@ -29,9 +29,10 @@
 						"writeBehavior": "upsert",
 						"upsertSettings": {
 							"useTempDB": false,
-							"keys": [
-								""
-							]
+							"keys": {
+								"value": "@pipeline().parameters.KeyColumnName",
+								"type": "Expression"
+							}
 						},
 						"sqlWriterUseTableLock": true,
 						"disableMetricsCollection": false
