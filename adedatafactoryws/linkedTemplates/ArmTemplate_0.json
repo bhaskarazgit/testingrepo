@@ -491,6 +491,55 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/adls_to_asdb_pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ADLS_SQLDB_DATAFLOW",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "ADLS_SQLDB_DATAFLOW",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"adlslego": {},
+									"SQLDatabase": {
+										"SinkTable": "legos"
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/ADLS_SQLDB_DATAFLOW')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/IncrementalLoad')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -568,22 +617,30 @@
 				},
 				"parameters": {
 					"SourceTableName": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "customer_table"
 					},
 					"SinkTableName": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "customer_table"
 					},
 					"WaterMarkColumn": {
-						"type": "int"
+						"type": "string",
+						"defaultValue": "LastModifytime"
 					},
 					"KeyColumnName": {
-						"type": "string"
+						"type": "array",
+						"defaultValue": [
+							"PersonID"
+						]
 					},
 					"FromDate": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "2017-09-01 00:56:00.000"
 					},
 					"ToDate": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "2017-09-05 08:06:00.000"
 					}
 				},
 				"annotations": []
@@ -591,55 +648,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/OnPremSQLDB')]",
 				"[concat(variables('factoryId'), '/datasets/AzureSqlDB')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/adls_to_asdb_pipeline')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "ADLS_SQLDB_DATAFLOW",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "1.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "ADLS_SQLDB_DATAFLOW",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"adlslego": {},
-									"SQLDatabase": {
-										"SinkTable": "legos"
-									}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/ADLS_SQLDB_DATAFLOW')]"
 			]
 		},
 		{
