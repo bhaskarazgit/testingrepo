@@ -69,22 +69,28 @@
 		],
 		"parameters": {
 			"SourceTableName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "customer_table"
 			},
 			"SinkTableName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "customer_table"
 			},
 			"WaterMarkColumn": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "LastModifytime"
 			},
 			"KeyColumnName": {
-				"type": "int"
+				"type": "int",
+				"defaultValue": "PersonID"
 			},
 			"FromDate": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "2017-09-01 00:56:00.000"
 			},
 			"ToDate": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "2017-09-05 08:06:00.000"
 			}
 		},
 		"annotations": []
