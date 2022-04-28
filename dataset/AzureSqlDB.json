@@ -5,6 +5,11 @@
 			"referenceName": "AzureSQLDB",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"SinkTable": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [],
