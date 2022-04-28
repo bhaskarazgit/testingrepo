@@ -1,0 +1,74 @@
+{
+	"name": "IncrementalLoad",
+	"properties": {
+		"activities": [
+			{
+				"name": "copyOnPremToASDB",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": {
+							"value": "@select * from pipeline().parameters.TableName where pipeline().parameters.WaterMarkColumn='4/28/2022'",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"id"
+							]
+						},
+						"sqlWriterUseTableLock": true,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "OnPremSQLDB",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureSqlDB",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"parameters": {
+			"TableName": {
+				"type": "string"
+			},
+			"WaterMarkColumn": {
+				"type": "string"
+			}
+		},
+		"annotations": []
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"name": "OnPremSQLDB",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OnPremSQLDBLinkedDService",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}
