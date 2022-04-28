@@ -25,7 +25,7 @@
 					"source": {
 						"type": "SqlServerSource",
 						"sqlReaderQuery": {
-							"value": "select * from @{pipeline().parameters.SourceTableName} \nwhere @{pipeline().parameters.WaterMarkColumn} >=@{pipeline().parameters.FromDate} \nand @{pipeline().parameters.WaterMarkColumn} <=@{pipeline().parameters.ToDate} \n",
+							"value": "select * from @{activity('LookupControlTable').output.value[0].SourceTableName} \nwhere @{activity('LookupControlTable').output.value[0].WaterMarkColumn}>=@{activity('LookupControlTable').output.value[0].FromDate}\nand @{activity('LookupControlTable').output.value[0].WaterMarkColumn}<=@{activity('LookupControlTable').output.value[0].ToDate}",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -95,7 +95,8 @@
 					"dataset": {
 						"referenceName": "OnPremSQLDB",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			}
 		],
