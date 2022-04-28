@@ -75,10 +75,10 @@
 				"type": "string"
 			},
 			"WaterMarkColumn": {
-				"type": "int"
+				"type": "string"
 			},
 			"KeyColumnName": {
-				"type": "string"
+				"type": "int"
 			},
 			"FromDate": {
 				"type": "string"
