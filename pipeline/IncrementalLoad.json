@@ -55,16 +55,34 @@
 				"outputs": [
 					{
 						"referenceName": "AzureSqlDB",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"SinkTable": {
+								"value": "@pipeline().parameters.TableName",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			}
 		],
 		"parameters": {
-			"TableName": {
+			"SourceTableName ": {
+				"type": "string"
+			},
+			"SinkTableName": {
 				"type": "string"
 			},
 			"WaterMarkColumn": {
+				"type": "string"
+			},
+			"KeyColumnName": {
+				"type": "string"
+			},
+			"FromDate": {
+				"type": "string"
+			},
+			"ToDate": {
 				"type": "string"
 			}
 		},
