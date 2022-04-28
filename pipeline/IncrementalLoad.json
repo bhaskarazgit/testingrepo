@@ -81,7 +81,7 @@
 				"defaultValue": "LastModifytime"
 			},
 			"KeyColumnName": {
-				"type": "int",
+				"type": "string",
 				"defaultValue": "PersonID"
 			},
 			"FromDate": {
