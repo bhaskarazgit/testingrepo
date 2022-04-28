@@ -82,7 +82,9 @@
 			},
 			"KeyColumnName": {
 				"type": "array",
-				"defaultValue": "PersonID"
+				"defaultValue": [
+					"PersonID"
+				]
 			},
 			"FromDate": {
 				"type": "string",
