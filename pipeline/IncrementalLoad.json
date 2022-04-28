@@ -37,7 +37,7 @@
 						"upsertSettings": {
 							"useTempDB": false,
 							"keys": {
-								"value": "@pipeline().parameters.KeyColumnName",
+								"value": "@array(activity('LookupControlTable').output.value[0].KeyColumnName)",
 								"type": "Expression"
 							}
 						},
@@ -66,7 +66,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"SinkTable": {
-								"value": "@pipeline().parameters.SinkTableName",
+								"value": "@activity('LookupControlTable').output.value[0].SinkTableName",
 								"type": "Expression"
 							}
 						}
