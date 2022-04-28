@@ -17,7 +17,12 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "ADLS_SQLDB_DATAFLOW",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"SQLDatabase": {
+								"SinkTable": "legos"
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
