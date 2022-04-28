@@ -75,7 +75,7 @@
 				"type": "string"
 			},
 			"WaterMarkColumn": {
-				"type": "string"
+				"type": "int"
 			},
 			"KeyColumnName": {
 				"type": "string"
