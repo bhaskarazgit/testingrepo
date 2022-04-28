@@ -512,7 +512,7 @@
 							"source": {
 								"type": "SqlServerSource",
 								"sqlReaderQuery": {
-									"value": "select * from @{pipeline().parameters.SourceTableName} \nwhere @{pipeline().parameters.WaterMarkColumn} >=@{pipeline().parameters.FromDate} \n",
+									"value": "select * from @{pipeline().parameters.SourceTableName} \nwhere @{pipeline().parameters.WaterMarkColumn} >=@{pipeline().parameters.FromDate} \nand @{pipeline().parameters.WaterMarkColumn} <=@{pipeline().parameters.ToDate} \n",
 									"type": "Expression"
 								},
 								"queryTimeout": "02:00:00",
