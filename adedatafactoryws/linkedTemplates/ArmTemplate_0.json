@@ -237,12 +237,20 @@
 					"referenceName": "AzureSQLDB",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"SinkTable": {
+						"type": "string"
+					}
+				},
 				"annotations": [],
 				"type": "AzureSqlTable",
 				"schema": [],
 				"typeProperties": {
 					"schema": "dbo",
-					"table": "customer_table"
+					"table": {
+						"value": "@dataset().SinkTable",
+						"type": "Expression"
+					}
 				}
 			},
 			"dependsOn": [
@@ -504,7 +512,7 @@
 							"source": {
 								"type": "SqlServerSource",
 								"sqlReaderQuery": {
-									"value": "select * from @{pipeline().parameters.TableName} where @{pipeline().parameters.WaterMarkColumn}<'4/28/2022'",
+									"value": "select * from @{pipeline().parameters.SourceTableName} \nwhere @{pipeline().parameters.WaterMarkColumn} >=@{pipeline().parameters.FromDate} \nand @{pipeline().parameters.WaterMarkColumn} <=@{pipeline().parameters.ToDate} ",
 									"type": "Expression"
 								},
 								"queryTimeout": "02:00:00",
@@ -515,9 +523,10 @@
 								"writeBehavior": "upsert",
 								"upsertSettings": {
 									"useTempDB": false,
-									"keys": [
-										"PersonID"
-									]
+									"keys": {
+										"value": "@pipeline().parameters.KeyColumnName",
+										"type": "Expression"
+									}
 								},
 								"sqlWriterUseTableLock": true,
 								"disableMetricsCollection": false
@@ -543,7 +552,12 @@
 							{
 								"referenceName": "AzureSqlDB",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"SinkTable": {
+										"value": "@pipeline().parameters.SinkTableName",
+										"type": "Expression"
+									}
+								}
 							}
 						]
 					}
@@ -553,10 +567,22 @@
 					"cancelAfter": {}
 				},
 				"parameters": {
-					"TableName": {
+					"SourceTableName": {
+						"type": "string"
+					},
+					"SinkTableName": {
 						"type": "string"
 					},
 					"WaterMarkColumn": {
+						"type": "int"
+					},
+					"KeyColumnName": {
+						"type": "string"
+					},
+					"FromDate": {
+						"type": "string"
+					},
+					"ToDate": {
 						"type": "string"
 					}
 				},
@@ -592,7 +618,9 @@
 								"parameters": {},
 								"datasetParameters": {
 									"adlslego": {},
-									"SQLDatabase": {}
+									"SQLDatabase": {
+										"SinkTable": "legos"
+									}
 								}
 							},
 							"staging": {},
