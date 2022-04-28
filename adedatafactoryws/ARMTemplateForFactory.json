@@ -142,7 +142,14 @@
 					{
 						"name": "copyOnPremToASDB",
 						"type": "Copy",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "LookupControlTable",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -155,7 +162,7 @@
 							"source": {
 								"type": "SqlServerSource",
 								"sqlReaderQuery": {
-									"value": "select * from @{pipeline().parameters.SourceTableName} \nwhere @{pipeline().parameters.WaterMarkColumn} >=@{pipeline().parameters.FromDate} \nand @{pipeline().parameters.WaterMarkColumn} <=@{pipeline().parameters.ToDate} \n",
+									"value": "select * from @{activity('LookupControlTable').output.value[0].SourceTableName} \nwhere @{activity('LookupControlTable').output.value[0].WaterMarkColumn}>=@{activity('LookupControlTable').output.value[0].FromDate}\nand @{activity('LookupControlTable').output.value[0].WaterMarkColumn}<=@{activity('LookupControlTable').output.value[0].ToDate}",
 									"type": "Expression"
 								},
 								"queryTimeout": "02:00:00",
@@ -167,7 +174,7 @@
 								"upsertSettings": {
 									"useTempDB": false,
 									"keys": {
-										"value": "@pipeline().parameters.KeyColumnName",
+										"value": "@array(activity('LookupControlTable').output.value[0].KeyColumnName)",
 										"type": "Expression"
 									}
 								},
@@ -197,12 +204,39 @@
 								"type": "DatasetReference",
 								"parameters": {
 									"SinkTable": {
-										"value": "@pipeline().parameters.SinkTableName",
+										"value": "@activity('LookupControlTable').output.value[0].SinkTableName",
 										"type": "Expression"
 									}
 								}
 							}
 						]
+					},
+					{
+						"name": "LookupControlTable",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "select * from control_table",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "OnPremSQLDB",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
 					}
 				],
 				"policy": {
