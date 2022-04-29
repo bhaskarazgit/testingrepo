@@ -162,7 +162,7 @@
 							"source": {
 								"type": "SqlServerSource",
 								"sqlReaderQuery": {
-									"value": "select * from @{activity('LookupControlTable').output.value[0].SourceTableName} convertFromUtc()where @{activity('LookupControlTable').output.value[0].WaterMarkColumn}>='@{activity('LookupControlTable').output.value[0].FromDate}' and @{activity('LookupControlTable').output.value[0].WaterMarkColumn}<='@{activity('LookupControlTable').output.value[0].ToDate}'",
+									"value": "select * from @{activity('LookupControlTable').output.value[0].SourceTableName} where @{activity('LookupControlTable').output.value[0].WaterMarkColumn}>='@{activity('LookupControlTable').output.value[0].FromDate}' and @{activity('LookupControlTable').output.value[0].WaterMarkColumn}<='@{activity('LookupControlTable').output.value[0].ToDate}'",
 									"type": "Expression"
 								},
 								"queryTimeout": "02:00:00",
