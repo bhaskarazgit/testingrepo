@@ -17,6 +17,12 @@
 		"OnPremSQLDBLinkedDService_password": {
 			"value": ""
 		},
+		"ls_adls_datalakestorage_accountKey": {
+			"value": ""
+		},
+		"ls_blobstorage_connectionString": {
+			"value": ""
+		},
 		"AzureDataLakeStorage_properties_typeProperties_url": {
 			"value": "https://adestorageacct.dfs.core.windows.net"
 		},
@@ -25,6 +31,9 @@
 		},
 		"OnPremSQLDBLinkedDService_properties_typeProperties_userName": {
 			"value": "anshu"
+		},
+		"ls_adls_datalakestorage_properties_typeProperties_url": {
+			"value": "https://covidstorageadls.dfs.core.windows.net"
 		},
 		"containerUri": {
 			"value": ""
