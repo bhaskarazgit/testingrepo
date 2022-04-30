@@ -49,7 +49,7 @@
 		},
 		"ls_cases_deaths_http_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": " https://github.com/cloudboxacademy/"
+			"defaultValue": "@{linkedService().sourceBaseURL}"
 		},
 		"containerUri": {
 			"type": "string",

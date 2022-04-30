@@ -36,7 +36,7 @@
 			"value": "https://covidstorageadls.dfs.core.windows.net"
 		},
 		"ls_cases_deaths_http_properties_typeProperties_url": {
-			"value": " https://github.com/cloudboxacademy/"
+			"value": "@{linkedService().sourceBaseURL}"
 		}
 	}
 }
