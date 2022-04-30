@@ -70,6 +70,18 @@
 						"value": "@equals(activity('Get FileMetaDeta').output.columnCount,14)",
 						"type": "Expression"
 					},
+					"ifFalseActivities": [
+						{
+							"name": "Fail",
+							"type": "Fail",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"message": "Column Count Mistmatch",
+								"errorCode": "1234"
+							}
+						}
+					],
 					"ifTrueActivities": [
 						{
 							"name": "Copy Population Data",
