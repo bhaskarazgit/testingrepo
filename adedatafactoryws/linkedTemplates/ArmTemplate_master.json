@@ -47,6 +47,10 @@
 			"type": "string",
 			"defaultValue": "https://covidstorageadls.dfs.core.windows.net"
 		},
+		"ls_cases_deaths_http_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": " https://github.com/cloudboxacademy/"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -100,6 +104,9 @@
 					},
 					"ls_adls_datalakestorage_properties_typeProperties_url": {
 						"value": "[parameters('ls_adls_datalakestorage_properties_typeProperties_url')]"
+					},
+					"ls_cases_deaths_http_properties_typeProperties_url": {
+						"value": "[parameters('ls_cases_deaths_http_properties_typeProperties_url')]"
 					},
 					"OnPremSQLDBLinkedDService_properties_typeProperties_userName": {
 						"value": "[parameters('OnPremSQLDBLinkedDService_properties_typeProperties_userName')]"
