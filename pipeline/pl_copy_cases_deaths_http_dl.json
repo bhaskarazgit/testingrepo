@@ -104,7 +104,13 @@
 							"outputs": [
 								{
 									"referenceName": "ds_cases_deaths_csv_dl",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"sinkFileName": {
+											"value": "@item().sinkFileName",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						}
