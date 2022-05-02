@@ -1,0 +1,27 @@
+{
+	"name": "df_cases_deaths",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_cases_deaths_dl",
+						"type": "DatasetReference"
+					},
+					"name": "casesanddeathsstream"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          {<html><body>You are being <a href=\"https://raw.githubusercontent.com/cloudboxacademy/covid19/main/ecdc_data/cases_deaths.csv\">redirected</a>.</body></html>} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> casesanddeathsstream"
+			]
+		}
+	}
+}
