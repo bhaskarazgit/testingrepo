@@ -83,7 +83,8 @@
 				"     lateral: true) ~> pivotstream",
 				"pivotstream, lookupcountrycodestream lookup(ERROR_FUNCTION('') == lookupcountrycodestream@country,",
 				"     multiple: false,",
-				"     pickup: 'any',",
+				"     pickup: 'first',",
+				"     asc(ERROR_FUNCTION(''), true),",
 				"     broadcast: 'auto')~> lookuptransformation"
 			]
 		}
