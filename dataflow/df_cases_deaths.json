@@ -81,10 +81,9 @@
 				"     count = sum(daily_count),",
 				"     columnNaming: '$V_$N',",
 				"     lateral: true) ~> pivotstream",
-				"pivotstream, lookupcountrycodestream lookup(ERROR_FUNCTION('') == lookupcountrycodestream@country,",
+				"pivotstream, lookupcountrycodestream lookup(pivotstream@country == lookupcountrycodestream@country,",
 				"     multiple: false,",
-				"     pickup: 'first',",
-				"     asc(ERROR_FUNCTION(''), true),",
+				"     pickup: 'any',",
 				"     broadcast: 'auto')~> lookuptransformation"
 			]
 		}
