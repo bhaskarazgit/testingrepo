@@ -13,22 +13,54 @@
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "FilterCountry"
+				},
+				{
+					"name": "selectcasesdeathstream"
+				},
+				{
+					"name": "pivotstream"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          country as string,",
 				"          country_code as string,",
 				"          continent as string,",
-				"          population as string,",
+				"          population as integer,",
 				"          indicator as string,",
-				"          daily_count as string,",
-				"          date as string,",
-				"          rate_14_day as string,",
+				"          daily_count as short,",
+				"          date as date,",
+				"          rate_14_day as double,",
 				"          source as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> CasesandDeathsstream"
+				"     ignoreNoFilesFound: false) ~> CasesandDeathsstream",
+				"CasesandDeathsstream filter(continent=='Europe' && not(isNull(country_code))) ~> FilterCountry",
+				"FilterCountry select(mapColumn(",
+				"          country,",
+				"          country_code,",
+				"          population,",
+				"          indicator,",
+				"          daily_count,",
+				"          source,",
+				"          each(match(name=='date'),",
+				"               'reported' + '_date' = $$)",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectcasesdeathstream",
+				"selectcasesdeathstream pivot(groupBy(country,",
+				"          country_code,",
+				"          source,",
+				"          population,",
+				"          reported_date),",
+				"     pivotBy(indicator),",
+				"     count = sum(daily_count),",
+				"     columnNaming: '$N$V',",
+				"     lateral: false) ~> pivotstream"
 			]
 		}
 	}
