@@ -10,12 +10,25 @@
 						"type": "DatasetReference"
 					},
 					"name": "hosipatadmissionsstream"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_lookup_contrycode",
+						"type": "DatasetReference"
+					},
+					"name": "countrylookupstream"
 				}
 			],
 			"sinks": [],
 			"transformations": [
 				{
 					"name": "selecttransformation"
+				},
+				{
+					"name": "lookupstream"
+				},
+				{
+					"name": "selectlookupstream"
 				}
 			],
 			"scriptLines": [
@@ -31,6 +44,16 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> hosipatadmissionsstream",
+				"source(output(",
+				"          country as string,",
+				"          country_code_2_digit as string,",
+				"          country_code_3_digit as string,",
+				"          continent as string,",
+				"          population as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> countrylookupstream",
 				"hosipatadmissionsstream select(mapColumn(",
 				"          country,",
 				"          indicator,",
@@ -40,7 +63,24 @@
 				"          source",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> selecttransformation"
+				"     skipDuplicateMapOutputs: true) ~> selecttransformation",
+				"selecttransformation, countrylookupstream lookup(selecttransformation@country == countrylookupstream@country,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookupstream",
+				"lookupstream select(mapColumn(",
+				"          country = selecttransformation@country,",
+				"          indicator,",
+				"          reported_date,",
+				"          reported_year_week,",
+				"          value,",
+				"          source,",
+				"          country_code_2_digit,",
+				"          country_code_3_digit,",
+				"          population",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectlookupstream"
 			]
 		}
 	}
