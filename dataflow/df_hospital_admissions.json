@@ -45,6 +45,12 @@
 				},
 				{
 					"name": "aggregatestream"
+				},
+				{
+					"name": "joinstream"
+				},
+				{
+					"name": "pivotdaily"
 				}
 			],
 			"scriptLines": [
@@ -71,18 +77,18 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> countrylookupstream",
 				"source(output(",
-				"          date_key as date,",
+				"          date_key as string,",
 				"          date as date,",
-				"          year as short,",
-				"          month as short,",
-				"          day as short,",
+				"          year as string,",
+				"          month as string,",
+				"          day as string,",
 				"          day_name as string,",
-				"          day_of_year as short,",
-				"          week_of_month as short,",
+				"          day_of_year as string,",
+				"          week_of_month as string,",
 				"          week_of_year as string,",
 				"          month_name as string,",
-				"          year_month as integer,",
-				"          year_week as integer",
+				"          year_month as string,",
+				"          year_week as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
@@ -116,10 +122,24 @@
 				"     skipDuplicateMapOutputs: true) ~> selectlookupstream",
 				"selectlookupstream split(indicator=='Weekly new ICU admissions per 100k' || indicator== 'Weekly new hospital admissions per 100k',",
 				"     disjoint: false) ~> splitstream@(Weekly, Daily)",
-				"dimdatesourcestream derive(ecdc_year_week = year + '-w' + lpad(week_of_year,2,'0')) ~> derivedecdcyearweek",
+				"dimdatesourcestream derive(ecdc_year_week = year + '-W' + lpad(week_of_year,2,'0')) ~> derivedecdcyearweek",
 				"derivedecdcyearweek aggregate(groupBy(ecdc_year_week),",
 				"     week_start_date = min(date),",
-				"          week_end_date = max(date)) ~> aggregatestream"
+				"          week_end_date = max(date)) ~> aggregatestream",
+				"splitstream@Weekly, aggregatestream join(reported_year_week == ecdc_year_week,",
+				"     joinType:'inner',",
+				"     broadcast: 'auto')~> joinstream",
+				"splitstream@Daily pivot(groupBy(country,",
+				"          reported_date,",
+				"          reported_year_week,",
+				"          source,",
+				"          country_code_2_digit,",
+				"          country_code_3_digit,",
+				"          population),",
+				"     pivotBy(indicator, ['Daily hospital occupancy', 'Daily ICU occupancy']),",
+				"     count = sum(value),",
+				"     columnNaming: '$V_$N',",
+				"     lateral: true) ~> pivotdaily"
 			]
 		}
 	}
