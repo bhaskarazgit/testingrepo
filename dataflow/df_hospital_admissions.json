@@ -1,0 +1,33 @@
+{
+	"name": "df_hospital_admissions",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_hospital_admissions_dl",
+						"type": "DatasetReference"
+					},
+					"name": "hosipatadmissionsstream"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          country as string,",
+				"          indicator as string,",
+				"          date as date,",
+				"          year_week as string,",
+				"          value as double,",
+				"          source as string,",
+				"          url as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> hosipatadmissionsstream"
+			]
+		}
+	}
+}
