@@ -90,12 +90,6 @@
 					"ls_blobstorage_connectionString": {
 						"value": "[parameters('ls_blobstorage_connectionString')]"
 					},
-					"OnPremSQLDBLinkedDService_connectionString": {
-						"value": "[parameters('OnPremSQLDBLinkedDService_connectionString')]"
-					},
-					"OnPremSQLDBLinkedDService_password": {
-						"value": "[parameters('OnPremSQLDBLinkedDService_password')]"
-					},
 					"AzureDataLakeStorage_properties_typeProperties_url": {
 						"value": "[parameters('AzureDataLakeStorage_properties_typeProperties_url')]"
 					},
@@ -107,9 +101,6 @@
 					},
 					"ls_cases_deaths_http_properties_typeProperties_url": {
 						"value": "[parameters('ls_cases_deaths_http_properties_typeProperties_url')]"
-					},
-					"OnPremSQLDBLinkedDService_properties_typeProperties_userName": {
-						"value": "[parameters('OnPremSQLDBLinkedDService_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -128,6 +119,15 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"OnPremSQLDBLinkedDService_connectionString": {
+						"value": "[parameters('OnPremSQLDBLinkedDService_connectionString')]"
+					},
+					"OnPremSQLDBLinkedDService_password": {
+						"value": "[parameters('OnPremSQLDBLinkedDService_password')]"
+					},
+					"OnPremSQLDBLinkedDService_properties_typeProperties_userName": {
+						"value": "[parameters('OnPremSQLDBLinkedDService_properties_typeProperties_userName')]"
 					}
 				}
 			},
