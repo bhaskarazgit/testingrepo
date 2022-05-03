@@ -39,6 +39,9 @@
 				},
 				{
 					"name": "splitstream"
+				},
+				{
+					"name": "derivedecdcyearweek"
 				}
 			],
 			"scriptLines": [
@@ -73,7 +76,7 @@
 				"          day_name as string,",
 				"          day_of_year as short,",
 				"          week_of_month as short,",
-				"          week_of_year as short,",
+				"          week_of_year as string,",
 				"          month_name as string,",
 				"          year_month as integer,",
 				"          year_week as integer",
@@ -109,7 +112,8 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectlookupstream",
 				"selectlookupstream split(indicator=='Weekly new ICU admissions per 100k' || indicator== 'Weekly new hospital admissions per 100k',",
-				"     disjoint: false) ~> splitstream@(Weekly, Daily)"
+				"     disjoint: false) ~> splitstream@(Weekly, Daily)",
+				"dimdatesourcestream derive(ecdc_year_week = year + '-w' + lpad(week_of_year,2,'0')) ~> derivedecdcyearweek"
 			]
 		}
 	}
