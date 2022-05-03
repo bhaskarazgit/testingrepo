@@ -19,7 +19,15 @@
 					"name": "lookupsourcestream"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_processed_cases_deaths",
+						"type": "DatasetReference"
+					},
+					"name": "sinkstream"
+				}
+			],
 			"transformations": [
 				{
 					"name": "FilterCountry"
@@ -98,7 +106,14 @@
 				"          deaths_count = Countdeaths",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> selecttransformation"
+				"     skipDuplicateMapOutputs: false) ~> selecttransformation",
+				"selecttransformation sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkstream"
 			]
 		}
 	}
