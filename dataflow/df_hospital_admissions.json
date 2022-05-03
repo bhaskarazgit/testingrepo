@@ -17,6 +17,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "countrylookupstream"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_dim_date_dl",
+						"type": "DatasetReference"
+					},
+					"name": "dimdatesourcestream"
 				}
 			],
 			"sinks": [],
@@ -29,6 +36,9 @@
 				},
 				{
 					"name": "selectlookupstream"
+				},
+				{
+					"name": "splitstream"
 				}
 			],
 			"scriptLines": [
@@ -54,6 +64,23 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> countrylookupstream",
+				"source(output(",
+				"          date_key as date,",
+				"          date as date,",
+				"          year as short,",
+				"          month as short,",
+				"          day as short,",
+				"          day_name as string,",
+				"          day_of_year as short,",
+				"          week_of_month as short,",
+				"          week_of_year as short,",
+				"          month_name as string,",
+				"          year_month as integer,",
+				"          year_week as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> dimdatesourcestream",
 				"hosipatadmissionsstream select(mapColumn(",
 				"          country,",
 				"          indicator,",
@@ -80,7 +107,9 @@
 				"          population",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> selectlookupstream"
+				"     skipDuplicateMapOutputs: true) ~> selectlookupstream",
+				"selectlookupstream split(indicator=='Weekly new ICU admissions per 100k' || indicator== 'Weekly new hospital admissions per 100k',",
+				"     disjoint: false) ~> splitstream@(Weekly, Daily)"
 			]
 		}
 	}
