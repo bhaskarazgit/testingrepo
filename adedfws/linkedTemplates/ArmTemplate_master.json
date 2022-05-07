@@ -1,0 +1,139 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adedfws"
+		},
+		"AzureDataLakeStorage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage'"
+		},
+		"AzureSQLDB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSQLDB'"
+		},
+		"OnPremSQLDBLinkedDService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'OnPremSQLDBLinkedDService'"
+		},
+		"OnPremSQLDBLinkedDService_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'OnPremSQLDBLinkedDService'"
+		},
+		"ls_adls_datalakestorage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ls_adls_datalakestorage'"
+		},
+		"ls_blobstorage_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_blobstorage'"
+		},
+		"AzureDataLakeStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adestorageacct.dfs.core.windows.net"
+		},
+		"Http_Rebrickable_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://cdn.rebrickable.com/media/downloads/"
+		},
+		"OnPremSQLDBLinkedDService_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "anshu"
+		},
+		"ls_adls_datalakestorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adecoviddatalakeacct.dfs.core.windows.net"
+		},
+		"ls_cases_deaths_http_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "@{linkedService().sourceBaseURL}"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "adedfws_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureDataLakeStorage_accountKey": {
+						"value": "[parameters('AzureDataLakeStorage_accountKey')]"
+					},
+					"AzureSQLDB_connectionString": {
+						"value": "[parameters('AzureSQLDB_connectionString')]"
+					},
+					"ls_adls_datalakestorage_accountKey": {
+						"value": "[parameters('ls_adls_datalakestorage_accountKey')]"
+					},
+					"ls_blobstorage_connectionString": {
+						"value": "[parameters('ls_blobstorage_connectionString')]"
+					},
+					"AzureDataLakeStorage_properties_typeProperties_url": {
+						"value": "[parameters('AzureDataLakeStorage_properties_typeProperties_url')]"
+					},
+					"Http_Rebrickable_properties_typeProperties_url": {
+						"value": "[parameters('Http_Rebrickable_properties_typeProperties_url')]"
+					},
+					"ls_adls_datalakestorage_properties_typeProperties_url": {
+						"value": "[parameters('ls_adls_datalakestorage_properties_typeProperties_url')]"
+					},
+					"ls_cases_deaths_http_properties_typeProperties_url": {
+						"value": "[parameters('ls_cases_deaths_http_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "adedfws_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"OnPremSQLDBLinkedDService_connectionString": {
+						"value": "[parameters('OnPremSQLDBLinkedDService_connectionString')]"
+					},
+					"OnPremSQLDBLinkedDService_password": {
+						"value": "[parameters('OnPremSQLDBLinkedDService_password')]"
+					},
+					"OnPremSQLDBLinkedDService_properties_typeProperties_userName": {
+						"value": "[parameters('OnPremSQLDBLinkedDService_properties_typeProperties_userName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adedfws_ArmTemplate_0')]"
+			]
+		}
+	]
+}
