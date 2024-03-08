@@ -1,0 +1,115 @@
+{
+	"name": "pipeline4",
+	"properties": {
+		"activities": [
+			{
+				"name": "setVariable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "var",
+					"value": "abbabab"
+				}
+			},
+			{
+				"name": "setVariable2",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "var",
+					"value": {
+						"value": "@int('1')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "setVariable3",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "var",
+					"value": "hhhjj"
+				}
+			},
+			{
+				"name": "dummy",
+				"type": "Wait",
+				"dependsOn": [
+					{
+						"activity": "setVariable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "setVariable3",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "setVariable2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 1
+				}
+			},
+			{
+				"name": "Set variable4",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "dummy",
+						"dependencyConditions": [
+							"Skipped"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "error",
+					"value": {
+						"value": "@concat(activity('setVariable1').Error?.Message,'|',activity('setVariable2').Error?.Message,'|',activity('setVariable3').Error?.Message)",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"var": {
+				"type": "String"
+			},
+			"error": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-03-01T00:23:53Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

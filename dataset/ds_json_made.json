@@ -1,0 +1,20 @@
+{
+	"name": "ds_json_made",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adls_made",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "*.json",
+				"fileSystem": "raw"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,9 @@
+{
+	"name": "dev-cloudlogz-ws",
+	"location": "westus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "3ea7c88b-3e55-4a7b-809c-cfecc5791800",
+		"tenantId": "6ff22d29-5aa8-4dde-b86c-84ea206c5538"
+	}
+}

@@ -1,0 +1,29 @@
+{
+	"name": "tr_incremental",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipeline": {
+			"pipelineReference": {
+				"referenceName": "pl_incremental_file_load",
+				"type": "PipelineReference"
+			},
+			"parameters": {
+				"WindowStartTime": "@trigger().outputs.windowStartTime",
+				"WindowEndTime": "@trigger().outputs. windowEndTime"
+			}
+		},
+		"type": "TumblingWindowTrigger",
+		"typeProperties": {
+			"frequency": "Minute",
+			"interval": 5,
+			"startTime": "2024-03-02T15:20:00Z",
+			"delay": "00:00:00",
+			"maxConcurrency": 50,
+			"retryPolicy": {
+				"intervalInSeconds": 30
+			},
+			"dependsOn": []
+		}
+	}
+}

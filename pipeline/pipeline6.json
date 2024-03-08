@@ -1,0 +1,102 @@
+{
+	"name": "pipeline6",
+	"properties": {
+		"activities": [
+			{
+				"name": "SetVariableActivity1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "variable1",
+					"value": "abcdef"
+				}
+			},
+			{
+				"name": "SetVariableActivity2",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "SetVariableActivity1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "variable1",
+					"value": {
+						"value": "@int('1')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "SetVariableActivity3",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "SetVariableActivity2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "variable1",
+					"value": "abcdef"
+				}
+			},
+			{
+				"name": "SetErrorMessage",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "SetVariableActivity3",
+						"dependencyConditions": [
+							"Skipped",
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "error",
+					"value": {
+						"value": "@concat(activity('SetVariableActivity1')?.Error?.Message,' | ',activity('SetVariableActivity2')?.Error?.Message,'|',activity('SetVariableActivity3')?.Error?.Message)",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"variable1": {
+				"type": "String"
+			},
+			"error": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-03-03T14:54:53Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

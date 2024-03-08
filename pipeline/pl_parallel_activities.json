@@ -1,0 +1,147 @@
+{
+	"name": "pl_parallel_activities",
+	"properties": {
+		"activities": [
+			{
+				"name": "SetVariableActivity1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "variable1",
+					"value": "abcdef"
+				}
+			},
+			{
+				"name": "SetVariableActivity2",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "variable1",
+					"value": {
+						"value": "@int('1')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "SetVariableActivity3",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "variable1",
+					"value": "abcdef"
+				}
+			},
+			{
+				"name": "SetErrorMessage",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "dummy",
+						"dependencyConditions": [
+							"Skipped"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "error",
+					"value": {
+						"value": "@concat(activity('SetVariableActivity1')?.Error?.Message,' | ',activity('SetVariableActivity2')?.Error?.Message,'|',activity('SetVariableActivity3')?.Error?.Message)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "dummy",
+				"type": "Wait",
+				"dependsOn": [
+					{
+						"activity": "SetVariableActivity1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "SetVariableActivity2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "SetVariableActivity3",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 1
+				}
+			},
+			{
+				"name": "sendEmail",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "SetErrorMessage",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"url": "https://prod-52.westus.logic.azure.com:443/workflows/f76bb6de485e4ed0b8b903bc401d36ff/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=wmNMg5DA1mFfHPW54fMv2jHAIr7M-ydcCxrSREwcW5c",
+					"body": {
+						"PipeLine": "@pipeline().Pipeline",
+						"RunId": "@pipeline().RunId",
+						"Error Message": "@variables('error')"
+					}
+				}
+			}
+		],
+		"variables": {
+			"variable1": {
+				"type": "String"
+			},
+			"error": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-03-03T15:55:58Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

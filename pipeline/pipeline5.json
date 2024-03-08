@@ -1,0 +1,25 @@
+{
+	"name": "pipeline5",
+	"properties": {
+		"activities": [
+			{
+				"name": "Validation1",
+				"type": "Validation",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_csv",
+						"type": "DatasetReference"
+					},
+					"timeout": "0.12:00:00",
+					"sleep": 10,
+					"childItems": false
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-03-02T13:51:39Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,24 @@
+{
+	"name": "tr_storage_event_made",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pipeline1",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/silver/blobs/",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/5d626b70-9b96-4e4c-86d3-459e12945dd5/resourceGroups/db-cloudlogz-rg/providers/Microsoft.Storage/storageAccounts/cloudlogzadls",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

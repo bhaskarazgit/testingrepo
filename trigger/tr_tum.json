@@ -1,0 +1,29 @@
+{
+	"name": "tr_tum",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipeline": {
+			"pipelineReference": {
+				"referenceName": "pipeline2",
+				"type": "PipelineReference"
+			},
+			"parameters": {
+				"windowStartTime": "@trigger().outputs.windowStartTime",
+				"windowEndTime": "@trigger().outputs.windowEndTime"
+			}
+		},
+		"type": "TumblingWindowTrigger",
+		"typeProperties": {
+			"frequency": "Minute",
+			"interval": 5,
+			"startTime": "2024-02-29T18:07:00Z",
+			"delay": "00:00:00",
+			"maxConcurrency": 50,
+			"retryPolicy": {
+				"intervalInSeconds": 30
+			},
+			"dependsOn": []
+		}
+	}
+}

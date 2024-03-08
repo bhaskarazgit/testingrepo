@@ -1,0 +1,134 @@
+{
+	"name": "seq_pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "setVariable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "var",
+					"value": "abbabab"
+				}
+			},
+			{
+				"name": "setVariable2",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "setVariable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "var",
+					"value": {
+						"value": "@int('1')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "setVariable3",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "setVariable2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "var",
+					"value": "hhhjj"
+				}
+			},
+			{
+				"name": "Set variable4",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "setVariable3",
+						"dependencyConditions": [
+							"Succeeded",
+							"Skipped"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "error",
+					"value": {
+						"value": "@concat(activity('setVariable1')?.Error?.Message,'|',activity('setVariable2')?.Error?.Message,'|',activity('setVariable3')?.Error?.Message)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Web1",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Set variable4",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"url": "https://prod-107.westus.logic.azure.com:443/workflows/274546932c244d76965fadcba3adc925/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Tb8UGo8cCuB4gE8hVA1x9esUPeh9vB3hSvZQ-9QBG8U",
+					"body": {
+						"PipelineName": "@{pipeline().Pipeline}",
+						"Error": "@{variables('error')}",
+						"RunID": "@{pipeline().RunId}"
+					}
+				}
+			}
+		],
+		"variables": {
+			"var": {
+				"type": "String"
+			},
+			"error": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-03-03T07:32:30Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
