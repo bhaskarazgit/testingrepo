@@ -1,0 +1,9 @@
+{
+	"name": "adfchaithresh",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "f272c35e-8833-462e-a312-7e8e4e93b881",
+		"tenantId": "c1721880-76a8-4efe-b320-967c7fd1a746"
+	}
+}

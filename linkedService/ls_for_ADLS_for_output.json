@@ -1,0 +1,12 @@
+{
+	"name": "ls_for_ADLS_for_output",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://chaithreshadlsac.dfs.core.windows.net/",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDEzMTE0MDMwLTIyREItNDI5My1BRDA5LUZGRTcwNUQ5RDc0NF85MjAyM2Y5NC04OWM4LTQxNTUtYTA4OC1iOGEwYmFjYjE1N2YiDQp9"
+		}
+	}
+}

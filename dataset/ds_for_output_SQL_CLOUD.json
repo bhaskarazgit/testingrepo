@@ -1,0 +1,17 @@
+{
+	"name": "ds_for_output_SQL_CLOUD",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_for_SQL_CLOUD_for_output",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "custdetail3"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

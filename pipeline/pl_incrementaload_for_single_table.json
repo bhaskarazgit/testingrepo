@@ -1,0 +1,195 @@
+{
+	"name": "pl_incrementaload_for_single_table",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "WMD_Start",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "WMD_end",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": {
+							"value": "SELECT *\nFROM custdetail3\nWHERE updated_at>'@{activity('WMD_Start').output.firstRow.start_wmd}' AND\nupdated_at<='@{activity('WMD_end').output.firstRow.end_wmd}'\n\n\n\n\n\n",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_for_input_SQL_ONPREM",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_for_output_SQL_CLOUD",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "WMD_Start",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT \ncontrol_sno,\ntable_name,\nlast_loaded_date as start_wmd\nFROM controltable3\nWHERE table_name='custdetail3'\n",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_for_input_SQL_ONPREM",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "WMD_end",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT\nMAX(updated_at) as end_wmd\nFROM custdetail3\n",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_for_output_SQL_CLOUD",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Set Error",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Wait",
+						"dependencyConditions": [
+							"Skipped"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "v_error_message",
+					"value": {
+						"value": "@concat(\n    '*WMD_Start-->',activity('WMD_Start')?.error?.message,\n     '*WMD_end-->',activity('WMD_end')?.error?.message,\n     '*Copy data1--.',activity('Copy data1')?.error?.message\n     )",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Wait",
+				"type": "Wait",
+				"dependsOn": [
+					{
+						"activity": "Copy data1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 1
+				}
+			},
+			{
+				"name": "Get Error",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set Error",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "error_message",
+					"value": {
+						"value": "@concat(\n\tif(greater(length(split(variables('v_error_message'),'*')[0]),100), split(variables('v_error_message'),'*')[0] ,'No'),\n\t'testing',\n    if(greater(length(split(variables('v_error_message'),'*')[1]),100), split(variables('v_error_message'),'*')[1] ,'No'),\n\t'testing',\n\tif(greater(length(split(variables('v_error_message'),'*')[2]),100), split(variables('v_error_message'),'*')[2] ,'No'),\n\t'testing',\n\t\nif(greater(length(split(variables('v_error_message'),'*')[3]),100), split(variables('v_error_message'),'*')[3] ,'No'),\n\t'testing'\n)\n\n\n   \n\n",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"v_error_message": {
+				"type": "String"
+			},
+			"error_message": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-03-28T06:44:43Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
